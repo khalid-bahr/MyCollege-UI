@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>لوحة تحكم الطالب | My College</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = { 
+            darkMode: 'class',
+            theme: { extend: { colors: { brand: { light: '#fbf9f6', accent: '#d97706', dark: '#78350f' } } } }
+        }
+        if (localStorage.getItem('theme') === 'dark') document.documentElement.classList.add('dark');
+    </script>
+    <style>
+        body { font-family: 'Cairo', sans-serif; }
+        .fade-in { animation: fadeIn 0.4s ease-out forwards; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+</head>
+<body class="bg-brand-light dark:bg-stone-950 transition-colors duration-500 h-screen flex overflow-hidden">
+
+    <aside class="w-72 bg-white dark:bg-stone-900 border-l border-stone-100 dark:border-stone-800 flex flex-col h-full z-20 shadow-2xl transition-all">
+        <div class="h-24 flex items-center px-8 border-b border-stone-100 dark:border-stone-800">
+            <a href="index.html" class="text-2xl font-black text-stone-800 dark:text-white tracking-tighter">My <span class="text-brand-accent">College</span></a>
+        </div>
+
+        <div class="flex-1 overflow-y-auto no-scrollbar py-6 px-4 space-y-2">
+            <p class="px-4 text-xs font-black text-stone-400 uppercase tracking-widest mb-4">القائمة الرئيسية</p>
+            <button onclick="switchTab('overview')" id="btn-overview" class="tab-btn w-full flex items-center gap-4 px-4 py-3.5 rounded-2xl text-white bg-brand-accent transition font-bold text-right">
+                <span class="text-xl">📊</span> نظرة عامة
+            </button>
+            <button onclick="switchTab('academic')" id="btn-academic" class="tab-btn w-full flex items-center gap-4 px-4 py-3.5 rounded-2xl text-stone-600 dark:text-stone-400 hover:bg-stone-50 dark:hover:bg-stone-800 transition font-bold text-right">
+                <span class="text-xl">🎓</span> السجل الأكاديمي
+            </button>
+            <button onclick="switchTab('courses')" id="btn-courses" class="tab-btn w-full flex items-center gap-4 px-4 py-3.5 rounded-2xl text-stone-600 dark:text-stone-400 hover:bg-stone-50 dark:hover:bg-stone-800 transition font-bold text-right">
+                <span class="text-xl">📚</span> المقررات الدراسية
+            </button>
+            <button onclick="switchTab('personal')" id="btn-personal" class="tab-btn w-full flex items-center gap-4 px-4 py-3.5 rounded-2xl text-stone-600 dark:text-stone-400 hover:bg-stone-50 dark:hover:bg-stone-800 transition font-bold text-right">
+                <span class="text-xl">👤</span> البيانات الشخصية
+            </button>
+        </div>
+
+        <div class="p-4 border-t border-stone-100 dark:border-stone-800 bg-stone-50 dark:bg-stone-900/50">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-full bg-brand-accent text-white flex items-center justify-center font-black" id="sideInitial">ط</div>
+                <div class="flex-1 truncate">
+                    <h4 class="text-sm font-black text-stone-800 dark:text-white truncate" id="sideName">جاري التحميل...</h4>
+                    <p class="text-xs font-bold text-stone-500 dark:text-stone-400 truncate" id="sideRole">طالب</p>
+                </div>
+            </div>
+        </div>
+    </aside>
+
+    <main class="flex-1 flex flex-col h-full overflow-hidden relative">
+        <header class="h-24 bg-white/80 dark:bg-stone-900/80 backdrop-blur-md border-b border-stone-100 dark:border-stone-800 flex items-center justify-between px-8 z-10">
+            <h2 class="text-2xl font-black text-stone-800 dark:text-white" id="pageTitle">نظرة عامة</h2>
+            <div class="flex items-center gap-4">
+                <button onclick="toggleDarkMode()" class="w-12 h-12 rounded-2xl bg-stone-50 dark:bg-stone-800 text-brand-accent flex items-center justify-center text-xl transition hover:scale-105 border border-stone-100 dark:border-stone-700">🌓</button>
+                <button onclick="logout()" class="px-6 py-3 bg-red-50 dark:bg-red-500/10 text-red-600 dark:text-red-400 font-bold rounded-2xl hover:bg-red-100 dark:hover:bg-red-500/20 transition flex items-center gap-2 border border-red-100 dark:border-red-500/20">
+                    تسجيل الخروج ↩
+                </button>
+            </div>
+        </header>
+
+        <div class="flex-1 overflow-y-auto p-8 relative">
+            <div id="tab-overview" class="tab-content fade-in space-y-8">
+                <div class="bg-gradient-to-r from-brand-accent to-brand-dark p-8 rounded-[2rem] shadow-xl text-white relative overflow-hidden">
+                    <div class="absolute -left-10 -top-10 opacity-10 text-9xl">🎓</div>
+                    <h3 class="text-3xl font-black mb-2">مرحباً بعودتك، <span id="welcomeName">...</span>! 👋</h3>
+                    <p class="font-bold text-white/80">استعد لبدء يوم دراسي جديد بنجاح.</p>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-center">
+                    <div class="bg-white dark:bg-stone-900 p-6 rounded-[2rem] border border-stone-100 dark:border-stone-800">
+                        <div class="w-14 h-14 bg-blue-50 dark:bg-blue-500/10 text-blue-500 rounded-2xl flex items-center justify-center text-2xl mx-auto mb-4">📈</div>
+                        <p class="text-stone-500 text-sm font-bold">المعدل التراكمي (GPA)</p>
+                        <h4 class="text-3xl font-black text-stone-800 dark:text-white mt-1">3.85</h4>
+                    </div>
+                </div>
+            </div>
+
+            <div id="tab-academic" class="tab-content hidden fade-in space-y-8">
+                <div class="bg-white dark:bg-stone-900 p-8 rounded-[2.5rem] border border-stone-100 dark:border-stone-800 shadow-sm">
+                    <h3 class="text-xl font-black text-brand-accent mb-6 border-b pb-4">بيانات القيد الجامعي</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                        <div><label class="text-xs font-bold text-stone-400 uppercase">الجامعة</label><p class="font-black text-lg text-stone-800 dark:text-white mt-1" id="acadUni">--</p></div>
+                        <div><label class="text-xs font-bold text-stone-400 uppercase">الكلية</label><p class="font-black text-lg text-stone-800 dark:text-white mt-1" id="acadFac">--</p></div>
+                        <div><label class="text-xs font-bold text-stone-400 uppercase">الفرقة الدراسية</label><p class="font-black text-lg text-stone-800 dark:text-white mt-1" id="acadYear">--</p></div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="tab-personal" class="tab-content hidden fade-in space-y-8">
+                <div class="bg-white dark:bg-stone-900 p-8 rounded-[2.5rem] border border-stone-100 dark:border-stone-800 shadow-sm">
+                    <h3 class="text-xl font-black text-brand-accent mb-8 border-b pb-4">👤 المعلومات الأساسية</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <div><label class="text-xs font-bold text-stone-400">الاسم بالكامل</label><p class="font-black text-lg text-stone-800 dark:text-white mt-1" id="persName">--</p></div>
+                        <div><label class="text-xs font-bold text-stone-400">البريد الإلكتروني</label><p class="font-black text-lg text-stone-800 dark:text-white mt-1" id="persEmail" dir="ltr">--</p></div>
+                        <div><label class="text-xs font-bold text-stone-400">رقم الهاتف (واتساب)</label><p class="font-black text-lg text-stone-800 dark:text-white mt-1" id="persPhone" dir="ltr">--</p></div>
+                        <div><label class="text-xs font-bold text-stone-400">تاريخ الميلاد</label><p class="font-black text-lg text-stone-800 dark:text-white mt-1" id="persBirth">--</p></div>
+                        <div><label class="text-xs font-bold text-stone-400">المحافظة</label><p class="font-black text-lg text-stone-800 dark:text-white mt-1" id="persGov">--</p></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // 🚀 تعريف الروابط بشكل دقيق
+        const authUrl = 'https://mycollegee-api.runasp.net/api/auth';
+
+        function toggleDarkMode() {
+            const isDark = document.documentElement.classList.toggle('dark');
+            localStorage.setItem('theme', isDark ? 'dark' : 'light');
+        }
+
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+            document.getElementById('tab-' + tabId).classList.remove('hidden');
+            
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('bg-brand-accent', 'text-white');
+                btn.classList.add('text-stone-600', 'dark:text-stone-400');
+            });
+            
+            const activeBtn = document.getElementById('btn-' + tabId);
+            activeBtn.classList.add('bg-brand-accent', 'text-white');
+            activeBtn.classList.remove('text-stone-600', 'dark:text-stone-400');
+            
+            const titles = { 'overview': 'نظرة عامة', 'academic': 'السجل الأكاديمي', 'courses': 'المقررات الدراسية', 'personal': 'البيانات الشخصية' };
+            document.getElementById('pageTitle').innerText = titles[tabId];
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const token = localStorage.getItem('token');
+            const userDataString = localStorage.getItem('user');
+
+            // 🛑 1. حارس البوابة: لو مفيش بيانات ارجع للرئيسية فوراً
+            if (!token || !userDataString) {
+                window.location.href = 'index.html';
+                return;
+            }
+
+            // 🚀 2. عرض البيانات المخزنة فوراً لتجنب الـ Logout التلقائي
+            try {
+                const user = JSON.parse(userDataString);
+                populateUI(user);
+            } catch (err) {
+                console.error('خطأ في قراءة بيانات المستخدم:', err);
+                localStorage.removeItem('user');
+                localStorage.removeItem('token');
+                window.location.href = 'index.html';
+            }
+
+            // 🛠️ 3. جلب أحدث بيانات (اختياري - سنفعلها بعد إضافة الـ Endpoint في الباك إند)
+            // fetchFreshProfile(user.id, token);
+        });
+
+        function populateUI(user) {
+            // الاسم والترحيب
+            const fullName = `${user.firstName} ${user.lastName}`;
+            document.getElementById('sideName').innerText = fullName;
+            document.getElementById('sideInitial').innerText = user.firstName.charAt(0).toUpperCase();
+            document.getElementById('welcomeName').innerText = user.firstName;
+
+            // البيانات الشخصية
+            document.getElementById('persName').innerText = fullName;
+            document.getElementById('persEmail').innerText = user.email;
+            document.getElementById('persPhone').innerText = user.phoneNumber || 'غير محدد';
+            document.getElementById('persBirth').innerText = user.dateOfBirth ? user.dateOfBirth.split('T')[0] : '--';
+            document.getElementById('persGov').innerText = user.governorateName || (user.governorate ? user.governorate.name : '--');
+
+            // البيانات الأكاديمية
+            document.getElementById('acadUni').innerText = user.universityName || (user.university ? user.university.name : '--');
+            document.getElementById('acadFac').innerText = user.facultyName || (user.faculty ? user.faculty.name : '--');
+            document.getElementById('acadYear').innerText = user.year || '--';
+        }
+
+        function logout() {
+            localStorage.removeItem('user');
+            localStorage.removeItem('token');
+            window.location.href = 'index.html';
+        }
+    </script>
+</body>
+</html>

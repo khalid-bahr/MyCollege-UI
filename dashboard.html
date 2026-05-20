@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>لوحة تحكم بحر | الإدارة الشاملة</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700&display=swap');
+        body { font-family: 'Tajawal', sans-serif; }
+        .hidden-content { display: none; }
+        .custom-scrollbar::-webkit-scrollbar { width: 4px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+        .fade-in { animation: fadeIn 0.5s ease-in-out; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    </style>
+</head>
+<body class="bg-slate-50 min-h-screen p-4 md:p-8">
+
+    <div id="loginOverlay" class="fixed inset-0 bg-slate-900 flex items-center justify-center z-50">
+        <div class="bg-white p-8 rounded-2xl shadow-2xl w-96 text-center">
+            <h2 class="text-2xl font-bold mb-6 text-slate-800">منطقة الإدارة 🔐</h2>
+            <input id="passField" type="password" placeholder="أدخل رمز الدخول" class="w-full p-3 border rounded-lg mb-4 text-center focus:ring-2 focus:ring-blue-500 outline-none">
+            <button onclick="checkAuth()" class="w-full bg-blue-600 text-white py-3 rounded-lg font-bold hover:bg-blue-700 transition">دخول</button>
+            <p id="errorMsg" class="text-red-500 mt-3 hidden text-sm">الرمز غير صحيح!</p>
+        </div>
+    </div>
+
+    <div id="mainContent" class="hidden-content max-w-7xl mx-auto fade-in">
+        <header class="flex flex-col md:flex-row justify-between items-center mb-10 bg-white p-6 rounded-3xl shadow-sm border-b-4 border-blue-600">
+            <div>
+                <h1 class="text-3xl font-black text-slate-800 border-r-4 border-blue-600 pr-4">لوحة تحكم "بحر" ⚓</h1>
+                <p class="text-slate-500 mr-5 mt-1 text-sm">إدارة الكورسات والمحاضرات والطلاب</p>
+            </div>
+            <div class="flex gap-3 mt-4 md:mt-0">
+                <button onclick="showSection('hub')" class="bg-slate-100 text-slate-700 px-4 py-2 rounded-xl font-bold hover:bg-slate-200 transition">الرئيسية 🏠</button>
+                <button onclick="location.reload()" class="bg-red-50 text-red-600 px-4 py-2 rounded-xl font-bold hover:bg-red-100 transition">تسجيل خروج ↩</button>
+            </div>
+        </header>
+
+        <div id="section-hub" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div onclick="showSection('dataManagement')" class="bg-white p-8 rounded-[2rem] shadow-sm border border-slate-100 hover:shadow-xl hover:-translate-y-2 transition-all cursor-pointer group">
+                <div class="w-16 h-16 bg-blue-50 text-blue-600 rounded-2xl flex items-center justify-center text-3xl mb-6 group-hover:bg-blue-600 group-hover:text-white transition-colors">📚</div>
+                <h3 class="text-xl font-black text-slate-800">إدارة البيانات</h3>
+                <p class="text-slate-500 text-sm mt-2">إضافة وحذف المحافظات، الكليات، الكورسات والمحاضرات.</p>
+            </div>
+
+            <div onclick="showSection('users')" class="bg-white p-8 rounded-[2rem] shadow-sm border border-slate-100 hover:shadow-xl hover:-translate-y-2 transition-all cursor-pointer group">
+                <div class="w-16 h-16 bg-green-50 text-green-600 rounded-2xl flex items-center justify-center text-3xl mb-6 group-hover:bg-green-600 group-hover:text-white transition-colors">👥</div>
+                <h3 class="text-xl font-black text-slate-800">المستخدمين الجدد</h3>
+                <p class="text-slate-500 text-sm mt-2">متابعة الطلاب المسجلين وتقدمهم الدراسي في المنصة.</p>
+            </div>
+
+            <div onclick="showSection('exams')" class="bg-white p-8 rounded-[2rem] shadow-sm border border-slate-100 hover:shadow-xl hover:-translate-y-2 transition-all cursor-pointer group">
+                <div class="w-16 h-16 bg-purple-50 text-purple-600 rounded-2xl flex items-center justify-center text-3xl mb-6 group-hover:bg-purple-600 group-hover:text-white transition-colors">📝</div>
+                <h3 class="text-xl font-black text-slate-800">نظام الامتحانات</h3>
+                <p class="text-slate-500 text-sm mt-2">إضافة اختبارات وتقييمات لكل محاضرة تعليمية.</p>
+            </div>
+
+            <div onclick="showSection('forum')" class="bg-white p-8 rounded-[2rem] shadow-sm border border-slate-100 hover:shadow-xl hover:-translate-y-2 transition-all cursor-pointer group">
+                <div class="w-16 h-16 bg-orange-50 text-orange-600 rounded-2xl flex items-center justify-center text-3xl mb-6 group-hover:bg-orange-600 group-hover:text-white transition-colors">💬</div>
+                <h3 class="text-xl font-black text-slate-800">إدارة المنتدى</h3>
+                <p class="text-slate-500 text-sm mt-2">التحكم في المنشورات والتعليقات وحل مشاكل الطلاب.</p>
+            </div>
+        </div>
+
+        <div id="section-dataManagement" class="hidden space-y-8 fade-in">
+            <div class="flex items-center justify-between mb-6">
+                <h2 class="text-2xl font-black text-slate-800">إدارة المحتوى الدراسي</h2>
+                <button onclick="showSection('hub')" class="text-blue-600 font-bold hover:underline">← العودة للقائمة</button>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 flex flex-col">
+                    <h3 class="text-lg font-bold mb-4 text-blue-700">📍 إدارة المحافظات</h3>
+                    <div class="flex gap-2 mb-4">
+                        <input id="govName" type="text" placeholder="اسم المحافظة" class="flex-1 p-2 border rounded-lg outline-none text-sm">
+                        <button onclick="addEntity('governorates', {name: document.getElementById('govName').value}, 'govName')" class="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm">إضافة</button>
+                    </div>
+                    <div id="govDeleteList" class="custom-scrollbar space-y-2 max-h-40 overflow-y-auto border-t pt-4"></div>
+                </div>
+
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 flex flex-col">
+                    <h3 class="text-lg font-bold mb-4 text-green-700">🎓 إدارة الجامعات</h3>
+                    <select id="govList" class="w-full p-2 border rounded-lg mb-2 outline-none text-sm"></select>
+                    <div class="flex gap-2 mb-4">
+                        <input id="uniName" type="text" placeholder="اسم الجامعة" class="flex-1 p-2 border rounded-lg outline-none text-sm">
+                        <button onclick="addEntity('universities', {name: document.getElementById('uniName').value, governorateId: parseInt(document.getElementById('govList').value)}, 'uniName')" class="bg-green-600 text-white px-4 py-2 rounded-lg text-sm">إضافة</button>
+                    </div>
+                    <div id="uniDeleteList" class="custom-scrollbar space-y-2 max-h-40 overflow-y-auto border-t pt-4"></div>
+                </div>
+
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 flex flex-col">
+                    <h3 class="text-lg font-bold mb-4 text-orange-700">🏛️ إدارة الكليات</h3>
+                    <select id="uniList" class="w-full p-2 border rounded-lg mb-2 outline-none text-sm"></select>
+                    <div class="flex gap-2 mb-4">
+                        <input id="facName" type="text" placeholder="اسم الكلية" class="flex-1 p-2 border rounded-lg outline-none text-sm">
+                        <button onclick="addEntity('faculties', {name: document.getElementById('facName').value, universityId: parseInt(document.getElementById('uniList').value)}, 'facName')" class="bg-orange-600 text-white px-4 py-2 rounded-lg text-sm">إضافة</button>
+                    </div>
+                    <div id="facDeleteList" class="custom-scrollbar space-y-2 max-h-40 overflow-y-auto border-t pt-4"></div>
+                </div>
+
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 flex flex-col border-t-4 border-t-purple-500">
+                    <h3 class="text-lg font-bold mb-4 text-purple-700">📚 إضافة مادة (كورس)</h3>
+                    <select id="facList" class="w-full p-2 border rounded-lg mb-2 outline-none text-sm"></select>
+                    <input id="courseName" type="text" placeholder="اسم المادة" class="w-full p-2 border rounded-lg mb-2 outline-none text-sm">
+                    <input id="courseDesc" type="text" placeholder="وصف المادة" class="w-full p-2 border rounded-lg mb-2 outline-none text-sm">
+                    <div class="grid grid-cols-2 gap-2 mb-4">
+                        <select id="courseYear" class="p-2 border rounded-lg outline-none text-sm bg-white">
+                            <option value="">-- اختر الفرقة --</option>
+                            <option value="الفرقة الأولى">الفرقة الأولى</option>
+                            <option value="الفرقة الثانية">الفرقة الثانية</option>
+                            <option value="الفرقة الثالثة">الفرقة الثالثة</option>
+                            <option value="الفرقة الرابعة">الفرقة الرابعة</option>
+                            <option value="الفرقة الخامسة">الفرقة الخامسة</option>
+                        </select>
+                        <select id="courseTerm" class="p-2 border rounded-lg outline-none text-sm bg-white">
+                            <option value="">-- اختر الترم --</option>
+                            <option value="الترم الأول">الترم الأول</option>
+                            <option value="الترم الثاني">الترم الثاني</option>
+                        </select>
+                    </div>
+                    <button onclick="addCourse()" class="w-full bg-purple-600 text-white py-2 rounded-lg font-bold hover:bg-purple-700 mb-4 text-sm">حفظ المادة</button>
+                    <div id="courseDeleteList" class="custom-scrollbar space-y-2 max-h-40 overflow-y-auto border-t pt-4"></div>
+                </div>
+
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 flex flex-col border-t-4 border-t-red-500 lg:col-span-2">
+                    <h3 class="text-lg font-bold mb-4 text-red-700 text-center">🎥 إضافة محاضرة جديدة</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <select id="courseList" class="w-full p-2 border rounded-lg mb-4 bg-slate-50 outline-none font-bold text-slate-700 text-sm"></select>
+                            <input id="lecName" type="text" placeholder="اسم المحاضرة" class="w-full p-2 border rounded-lg mb-2 outline-none text-sm">
+                            <textarea id="lecDesc" placeholder="نبذة عن المحاضرة" class="w-full p-2 border rounded-lg mb-2 outline-none h-20 resize-none text-sm"></textarea>
+                        </div>
+                        <div>
+                            <input id="lecVideo" type="text" placeholder="رابط يوتيوب" class="w-full p-2 border rounded-lg mb-2 bg-red-50 text-sm outline-none">
+                            <input id="lecFile" type="text" placeholder="رابط الملف / PDF" class="w-full p-2 border rounded-lg mb-4 bg-red-50 text-sm outline-none">
+                            <button onclick="addLecture()" class="w-full bg-red-600 text-white py-4 rounded-xl font-bold hover:bg-red-700 transition shadow-lg text-lg mt-2">رفع المحاضرة 🚀</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 lg:col-span-3 mt-8">
+                    <h3 class="text-xl font-bold mb-6 text-slate-800 border-r-4 border-red-600 pr-3">🎥 المحاضرات المتوفرة حالياً</h3>
+                    <div id="lecturesListContainer" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="text-center py-10 text-slate-400 italic">جاري تحميل المحاضرات...</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="section-users" class="hidden space-y-8 fade-in">
+            <div class="flex items-center justify-between mb-6">
+                <h2 class="text-2xl font-black text-slate-800">👥 إدارة الطلاب والمستخدمين</h2>
+                <div class="mb-6">
+    <input type="text" id="searchInput" onkeyup="filterUsers()" placeholder="🔍 ابحث بالاسم، الكود، الهاتف، أو الإيميل..." class="w-full p-4 rounded-xl border border-slate-200 focus:outline-none focus:border-blue-500 shadow-sm transition">
+</div>
+                <button onclick="showSection('hub')" class="text-blue-600 font-bold hover:underline">← العودة للقائمة</button>
+            </div>
+
+            <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
+                <div class="overflow-x-auto">
+                    <table class="w-full text-right border-collapse">
+                        <thead>
+                            <tr class="bg-slate-50 text-slate-500 text-sm">
+                                <th class="p-4 rounded-r-xl font-bold">الاسم</th>
+                                <th class="p-4 font-bold">التواصل</th>
+                                <th class="p-4 font-bold">الجامعة والكلية</th>
+                                <th class="p-4 rounded-l-xl font-bold">الفرقة</th>
+                            </tr>
+                        </thead>
+                        <tbody id="usersTableBody">
+                            <tr><td colspan="4" class="text-center py-8 text-slate-400 italic">جاري تحميل بيانات الطلاب...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div id="section-exams" class="hidden text-center py-20 bg-white rounded-3xl border border-dashed border-slate-300 fade-in">
+            <h2 class="text-2xl font-bold text-slate-400">نظام الامتحانات (قريباً) 📝</h2>
+        </div>
+        <div id="section-forum" class="hidden text-center py-20 bg-white rounded-3xl border border-dashed border-slate-300 fade-in">
+            <h2 class="text-2xl font-bold text-slate-400">إدارة المنتدى (قريباً) 💬</h2>
+        </div>
+
+    </div>
+
+    <script>
+        const apiUrl = 'https://mycollegee-api.runasp.net/api/college';
+
+        // الحفاظ على تسجيل الدخول بعد الريفرش
+        document.addEventListener('DOMContentLoaded', () => {
+            if (sessionStorage.getItem('admin_authenticated') === 'true') {
+                document.getElementById('loginOverlay').remove();
+                document.getElementById('mainContent').classList.remove('hidden-content');
+                loadAllLists();
+            }
+        });
+
+        async function checkAuth() {
+            const password = document.getElementById('passField').value;
+            const errorMsg = document.getElementById('errorMsg');
+
+            if (!password.trim()) {
+                errorMsg.textContent = 'يرجى إدخال رمز الدخول';
+                errorMsg.classList.remove('hidden');
+                return;
+            }
+
+            try {
+                const res = await fetch('https://mycollegee-api.runasp.net/api/auth/verify-admin', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ password: password })
+                });
+
+                if (res.ok) {
+                    sessionStorage.setItem('admin_authenticated', 'true');
+                    document.getElementById('loginOverlay').remove();
+                    document.getElementById('mainContent').classList.remove('hidden-content');
+                    loadAllLists();
+                } else {
+                    errorMsg.textContent = 'الرمز غير صحيح!';
+                    errorMsg.classList.remove('hidden');
+                }
+            } catch (err) { 
+                console.error('خطأ الاتصال:', err);
+                alert("فشل الاتصال بالسيرفر. تأكد من تشغيله.");
+            }
+        }
+
+        // دالة التبديل بين الأقسام (محدثة لتدعم جلب المستخدمين) 🚀
+        function showSection(sectionId) {
+            const sections = ['hub', 'dataManagement', 'users', 'exams', 'forum'];
+            sections.forEach(id => document.getElementById('section-' + id).classList.add('hidden'));
+            document.getElementById('section-' + sectionId).classList.remove('hidden');
+            
+            // إذا كان القسم هو المستخدمين، قم بتحميل بياناتهم فوراً
+            if (sectionId === 'users') {
+                loadUsers();
+            }
+        }
+
+        async function loadAllLists() {
+            try {
+                const [govRes, uniRes, facRes, courseRes, lecRes] = await Promise.all([
+                    fetch(`${apiUrl}/governorates`),
+                    fetch(`${apiUrl}/all-universities`),
+                    fetch(`${apiUrl}/all-faculties`),
+                    fetch(`${apiUrl}/all-courses`),
+                    fetch(`${apiUrl}/all-lectures`)
+                ]);
+
+                if (!govRes.ok || !uniRes.ok || !facRes.ok || !courseRes.ok || !lecRes.ok) {
+                    throw new Error('فشل جلب البيانات');
+                }
+
+                const [govs, unis, facs, courses, lectures] = await Promise.all([
+                    govRes.json(),
+                    uniRes.json(),
+                    facRes.json(),
+                    courseRes.json(),
+                    lecRes.json()
+                ]);
+
+                populateSelect('govList', govs);
+                populateSelect('uniList', unis);
+                populateSelect('facList', facs);
+                populateSelect('courseList', courses); 
+
+                renderDeleteList('govDeleteList', govs, 'governorates');
+                renderDeleteList('uniDeleteList', unis, 'universities');
+                renderDeleteList('facDeleteList', facs, 'faculties');
+                renderDeleteList('courseDeleteList', courses, 'courses');
+                
+                renderLecturesList(lectures); 
+            } catch (err) { 
+                console.error("خطأ في التحميل:", err);
+                alert('❌ فشل تحميل البيانات. تأكد من تشغيل السيرفر.');
+            }
+        }
+
+        function renderLecturesList(lectures) {
+            const container = document.getElementById('lecturesListContainer');
+            if (!container) return;
+
+            if (lectures.length === 0) {
+                container.innerHTML = '<p class="text-center text-slate-400 col-span-2">لا توجد محاضرات مرفوعة بعد</p>';
+                return;
+            }
+
+            container.innerHTML = lectures.map(lec => `
+                <div class="bg-white rounded-2xl border border-slate-100 hover:shadow-lg hover:border-blue-300 transition-all overflow-hidden group">
+                    <div class="relative w-full h-40 bg-gradient-to-br from-slate-200 to-slate-300 overflow-hidden">
+                        ${lec.thumbnailUrl ? `<img src="${lec.thumbnailUrl}" alt="${lec.name}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">` : `<div class="w-full h-full flex items-center justify-center text-5xl">🎥</div>`}
+                    </div>
+                    <div class="p-4">
+                        <h4 class="font-bold text-slate-800 text-sm mb-1 line-clamp-2">${lec.name}</h4>
+                        <p class="text-[11px] text-slate-500 mb-3">📚 ${lec.courseName || 'غير محددة'}</p>
+                        <div class="flex gap-2">
+                            <button onclick="addQuiz('${lec.id}')" class="flex-1 bg-purple-100 text-purple-600 px-2 py-1.5 rounded-lg text-[10px] font-bold hover:bg-purple-600 hover:text-white transition">📝 اختبار</button>
+                            <button onclick="deleteItem('lectures', ${lec.id})" class="flex-1 bg-red-50 text-red-500 px-2 py-1.5 rounded-lg text-[10px] font-bold hover:bg-red-500 hover:text-white transition">🗑️ حذف</button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function populateSelect(id, data) {
+            const el = document.getElementById(id);
+            el.innerHTML = '<option value="">-- اختر من القائمة --</option>';
+            data.forEach(item => el.add(new Option(item.name, item.id)));
+        }
+
+        function renderDeleteList(containerId, data, endpoint) {
+            const container = document.getElementById(containerId);
+            if(data.length === 0) {
+                container.innerHTML = '<p class="text-slate-400 text-center py-4 italic text-sm">لا توجد بيانات</p>';
+                return;
+            }
+            container.innerHTML = data.map(item => `
+                <div class="flex justify-between items-center p-2 bg-slate-50 rounded-lg hover:bg-slate-100 group">
+                    <span class="font-medium text-slate-700 text-sm truncate">${item.name}</span>
+                    <button onclick="deleteItem('${endpoint}', ${item.id})" class="text-red-400 hover:text-red-600 opacity-0 group-hover:opacity-100 text-xs">🗑️ حذف</button>
+                </div>
+            `).join('');
+        }
+
+        async function deleteItem(endpoint, id) {
+            if (!confirm("هل أنت متأكد من الحذف؟")) return;
+            const res = await fetch(`${apiUrl}/${endpoint}/${id}`, { method: 'DELETE' });
+            if (res.ok) loadAllLists();
+            else alert("❌ فشل الحذف: العنصر مرتبط ببيانات أخرى");
+        }
+
+        async function addEntity(endpoint, data, inputId) {
+            if(!data.name || !data.name.trim()) return alert("اكتب الاسم أولاً!");
+            
+            try {
+                const res = await fetch(`${apiUrl}/${endpoint}`, {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify(data)
+                });
+
+                if (res.ok) {
+                    document.getElementById(inputId).value = "";
+                    alert("✅ تم الإضافة بنجاح");
+                    loadAllLists();
+                } else {
+                    const err = await res.text();
+                    alert("❌ فشل الإضافة: " + err);
+                }
+            } catch (err) {
+                console.error('خطأ:', err);
+                alert("❌ خطأ في الاتصال بالسيرفر، تأكد أن الباك إند يعمل.");
+            }
+        }
+
+        async function addCourse() {
+            const data = {
+                name: document.getElementById('courseName').value.trim(),
+                description: document.getElementById('courseDesc').value.trim(),
+                year: document.getElementById('courseYear').value,
+                term: document.getElementById('courseTerm').value,
+                facultyId: parseInt(document.getElementById('facList').value)
+            };
+            if(!data.name || !data.facultyId) return alert("أكمل بيانات المادة!");
+            
+            try {
+                const res = await fetch(`${apiUrl}/courses`, {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify(data)
+                });
+
+                if (res.ok) {
+                    ['courseName', 'courseDesc', 'courseYear', 'courseTerm'].forEach(id => document.getElementById(id).value = "");
+                    alert("✅ تم حفظ المادة بنجاح");
+                    loadAllLists();
+                } else {
+                    alert("❌ فشل حفظ المادة");
+                }
+            } catch (err) {
+                console.error('خطأ:', err);
+                alert("❌ خطأ في الاتصال بالسيرفر");
+            }
+        }
+
+        async function addLecture() {
+            const data = {
+                name: document.getElementById('lecName').value.trim(),
+                description: document.getElementById('lecDesc').value.trim(),
+                videoUrl: document.getElementById('lecVideo').value.trim(),
+                fileUrl: document.getElementById('lecFile').value.trim(),
+                courseId: parseInt(document.getElementById('courseList').value)
+            };
+            if(!data.name || !data.courseId) return alert("يجب اختيار المادة وكتابة اسم المحاضرة!");
+            
+            try {
+                const res = await fetch(`${apiUrl}/lectures`, {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify(data)
+                });
+
+                if (res.ok) {
+                    alert("🎥 تم رفع المحاضرة بنجاح!");
+                    ['lecName', 'lecDesc', 'lecVideo', 'lecFile'].forEach(id => document.getElementById(id).value = "");
+                    loadAllLists();
+                } else {
+                    alert("❌ فشل رفع المحاضرة");
+                }
+            } catch (err) {
+                console.error('خطأ:', err);
+                alert("❌ خطأ في الاتصال بالسيرفر");
+            }
+        }
+
+        // --- دالة إدارة المستخدمين المستقلة (الجديدة) 🚀 ---
+        let allStudents = []; // مصفوفة لتخزين الطلاب للبحث السريع
+
+        async function loadUsers() {
+            try {
+                const res = await fetch(`${apiUrl}/all-users`);
+                if (!res.ok) throw new Error("فشل جلب المستخدمين");
+                const data = await res.json();
+                if (!Array.isArray(data)) throw new Error('البيانات المستقبلة غير صحيحة');
+                allStudents = data;
+                renderUsersTable(allStudents); // رسم الجدول
+            } catch (err) {
+                console.error('خطأ:', err);
+                document.getElementById('usersTableBody').innerHTML = '<tr><td colspan="4" class="text-center py-8 text-red-500 font-bold">❌ حدث خطأ في التحميل. تأكد من تشغيل السيرفر.</td></tr>';
+            }
+        }
+
+        // دالة رسم الجدول (عزلناها عشان نستخدمها في البحث)
+        function renderUsersTable(usersArray) {
+    const tbody = document.getElementById('usersTableBody');
+    if (usersArray.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="4" class="text-center py-8 text-slate-400 font-bold">لا يوجد نتائج تطابق بحثك</td></tr>';
+        return;
+    }
+
+    tbody.innerHTML = usersArray.map(u => `
+        <tr class="border-b border-slate-50 hover:bg-slate-50 transition ${u.isBanned ? 'bg-red-50 opacity-75' : ''}">
+            <td class="p-4">
+                <div class="font-bold text-slate-800">${u.fullName}</div>
+                <div class="text-xs font-black text-blue-600 mt-1 bg-blue-100 w-fit px-2 py-0.5 rounded">كود: ${u.studentCode || 'بدون'}</div>
+            </td>
+            <td class="p-4 text-sm text-slate-600">
+                <div>📧 ${u.email}</div>
+                <div class="mt-1 font-bold text-slate-500" dir="ltr">📱 ${u.phoneNumber}</div>
+            </td>
+            <td class="p-4 text-sm text-slate-600">
+                <span class="bg-blue-50 text-blue-600 px-2 py-1 rounded-md text-xs font-bold block w-fit mb-1">${u.universityName || 'غير محدد'}</span>
+                <span class="text-slate-500 text-xs">${u.facultyName || 'غير محدد'}</span>
+            </td>
+            <td class="p-4 flex flex-col gap-2">
+                <span class="text-sm font-black text-slate-600 text-center mb-1">${u.year || '-'}</span>
+                <button onclick="toggleBan(${u.id})" class="px-3 py-1.5 rounded-lg text-xs font-bold transition ${u.isBanned ? 'bg-green-100 text-green-700 hover:bg-green-200' : 'bg-red-100 text-red-700 hover:bg-red-200'}">
+                    ${u.isBanned ? '✅ فك الحظر' : '🚫 حظر الطالب'}
+                </button>
+                <button onclick="resetPassword(${u.id})" class="bg-slate-200 text-slate-700 hover:bg-slate-300 px-3 py-1.5 rounded-lg text-xs font-bold transition">
+                    🔑 تصفير المرور
+                </button>
+            </td>
+        </tr>
+    `).join('');
+}
+
+        // دالة البحث الفوري
+        function filterUsers() {
+            const val = document.getElementById('searchInput').value.toLowerCase();
+            const filtered = allStudents.filter(u => 
+                (u.fullName && u.fullName.toLowerCase().includes(val)) ||
+                (u.studentCode && u.studentCode.includes(val)) ||
+                (u.phoneNumber && u.phoneNumber.includes(val)) ||
+                (u.email && u.email.toLowerCase().includes(val))
+            );
+            renderUsersTable(filtered);
+        }
+
+        // دالة الحظر
+        async function toggleBan(userId) {
+            if (!confirm("هل أنت متأكد من تغيير حالة حظر هذا الطالب؟")) return;
+            
+            try {
+                const res = await fetch(`${apiUrl}/users/${userId}/toggle-ban`, { method: 'PUT' });
+                if (res.ok) {
+                    alert("تم تحديث حالة الطالب بنجاح");
+                    loadUsers(); // إعادة تحميل الجدول ليعكس اللون الأحمر
+                }
+            } catch (err) { alert("حدث خطأ أثناء الحظر"); }
+        }
+        // دالة طلب إعادة تعيين كلمة المرور 🔑
+        async function resetPassword(userId) {
+            // رسالة تأكيد للأدمن قبل التنفيذ
+            if (!confirm("هل أنت متأكد من إعادة تعيين كلمة المرور لهذا الطالب؟ سيصبح الباسورد هو (كود الطالب).")) return;
+            
+            try {
+                // إرسال الطلب للسيرفر
+                const res = await fetch(`${apiUrl}/users/${userId}/reset-password`, { method: 'PUT' });
+                
+                if (res.ok) {
+                    const data = await res.json();
+                    // عرض رسالة النجاح اللي فيها الباسورد الجديد (اللي هو الكود)
+                    alert(data.message); 
+                    // تحديث الجدول عشان لو في أي بيانات اتغيرت
+                    loadUsers(); 
+                } else {
+                    const errorText = await res.text();
+                    alert("❌ فشل إعادة تعيين كلمة المرور: " + errorText);
+                }
+            } catch (err) { 
+                console.error("Error resetting password:", err);
+                alert("❌ حدث خطأ في الاتصال بالسيرفر."); 
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>عرض المحاضرة | My College</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = { 
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            blue: '#1a3a8a',    // الكحلي الأساسي (بسطتهالك)
+                            teal: '#084c61',    // لون فوتر المنصة
+                            purple: '#8b5cf6'
+                        }
+                    }
+                }
+            }
+        }
+        if (localStorage.getItem('theme') === 'dark') document.documentElement.classList.add('dark');
+    </script>
+
+    <style>
+        body { font-family: 'Cairo', sans-serif; background-color: #f3f4f6; }
+        .video-container { position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; border-radius: 2rem; }
+        .video-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0; }
+    </style>
+</head>
+<body class="bg-[#f3f4f6] dark:bg-[#030712] text-slate-900 dark:text-slate-50 transition-colors duration-500 min-h-screen flex flex-col">
+
+    <nav class="bg-white dark:bg-[#0f172a] shadow-sm py-4 px-6 border-b border-slate-100 dark:border-white/5 sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto flex justify-between items-center">
+            <a href="index.html" class="flex items-center gap-3 group">
+                <img src="image/logo.png" alt="Logo" class="w-10 h-10 object-contain">
+                <span class="text-2xl font-black text-brand-blue dark:text-white">My<span class="text-brand-purple">College</span></span>
+            </a>
+            <button onclick="history.back()" class="bg-slate-100 dark:bg-white/5 text-slate-700 dark:text-slate-300 px-5 py-2 rounded-xl font-bold hover:bg-brand-blue hover:text-white transition-all">
+                ↩️ العودة للمحاضرات
+            </button>
+        </div>
+    </nav>
+
+    <header class="bg-brand-blue pt-12 pb-24 px-6 text-right relative overflow-hidden">
+        <div class="max-w-6xl mx-auto relative z-10">
+            <h1 id="lectureName" class="text-3xl md:text-5xl font-black text-white mb-4">جاري التحميل...</h1>
+            <div class="flex items-center gap-3 text-blue-100 font-bold">
+                <span class="bg-white/10 px-3 py-1 rounded-lg">🎥 عرض سينمائي</span>
+                <span class="w-1.5 h-1.5 rounded-full bg-brand-purple animate-pulse"></span>
+                <span>بث تعليمي مسجل</span>
+            </div>
+        </div>
+        <div class="absolute top-0 left-0 w-64 h-64 bg-white/5 rounded-full -translate-x-1/2 -translate-y-1/2"></div>
+    </header>
+
+    <main class="max-w-6xl mx-auto px-4 -mt-16 pb-20 w-full relative z-20">
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            
+            <div class="lg:col-span-2">
+                <div id="videoArea" class="bg-black video-container shadow-2xl mb-8 border-4 border-white dark:border-slate-800">
+                    <div class="absolute inset-0 flex items-center justify-center">
+                        <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-brand-purple"></div>
+                    </div>
+                </div>
+
+                <div class="bg-white dark:bg-[#0f172a] p-8 rounded-[2rem] shadow-sm border border-slate-100 dark:border-white/5">
+                    <h2 class="text-xl font-black text-brand-blue dark:text-white mb-4 flex items-center gap-2">
+                        <span class="w-2 h-7 bg-brand-purple rounded-full"></span>
+                        وصف وشرح المحاضرة
+                    </h2>
+                    <p id="lectureDesc" class="text-slate-600 dark:text-slate-400 leading-relaxed font-medium text-lg"></p>
+                </div>
+            </div>
+
+            <div class="space-y-6">
+                <div class="bg-white dark:bg-[#0f172a] p-6 rounded-[2rem] shadow-sm border border-slate-100 dark:border-white/5">
+                    <h3 class="font-black text-lg text-brand-blue dark:text-white mb-6">📂 المرفقات</h3>
+                    <div id="fileArea"></div>
+                </div>
+                <div class="bg-gradient-to-br from-brand-blue to-[#1e40af] text-white p-8 rounded-[2rem] shadow-xl relative overflow-hidden">
+                    <div class="relative z-10">
+                        <h4 class="font-black text-xl mb-3">💡 نصيحة المذاكرة</h4>
+                        <p class="text-blue-100 leading-relaxed">المشاهدة بتركيز مع تدوين الملاحظات تضمن لك استيعاب 90% من المحتوى.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="bg-brand-teal text-white pt-16 pb-8 mt-auto text-center relative overflow-hidden">
+        <div class="max-w-4xl mx-auto px-6 relative z-10">
+            <img src="image/logo.png" class="w-20 mx-auto mb-6 brightness-0 invert">
+            <div class="bg-white text-brand-teal inline-flex items-center gap-4 px-8 py-3 rounded-xl font-black text-2xl mb-8 shadow-2xl">
+                <span>📞 الخط الساخن: 16546</span>
+            </div>
+            <p class="text-slate-300 font-bold max-w-2xl mx-auto leading-relaxed mb-8">
+                تم صنع هذه المنصة بهدف تهيئة الطالب لـ كامل جوانب الدراسة الجامعية وما بعدها بكل سهولة ويسر.
+            </p>
+            <div class="pt-8 border-t border-white/10 text-slate-400 text-sm">
+                جميع الحقوق محفوظة &copy; 2026 لمنصة My College
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        const apiUrl = 'https://mycollegee-api.runasp.net/api/college';
+        const params = new URLSearchParams(window.location.search);
+        const lectureId = params.get('id');
+
+        if (lectureId) loadLectureDetails(lectureId);
+
+        async function loadLectureDetails(id) {
+            try {
+                const res = await fetch(`${apiUrl}/lecture-details/${id}`);
+                if (!res.ok) throw new Error();
+                const lecture = await res.json();
+
+                document.getElementById('lectureName').innerText = lecture.name || 'محاضرة بدون عنوان';
+                document.getElementById('lectureDesc').innerText = lecture.description || "لا يوجد وصف لهذه المحاضرة حالياً.";
+                document.title = `${lecture.name} | My College`;
+
+                // ==========================================
+                // 1. نظام تشغيل الفيديو المتعدد (قائمة التشغيل)
+                // ==========================================
+                if (lecture.videoUrl) {
+                    // تقسيم الروابط لو المدرس حط أكتر من رابط بينهم فاصلة
+                    const links = lecture.videoUrl.split(',').map(l => l.trim()).filter(l => l !== '');
+
+                    if (links.length > 0) {
+                        // تشغيل أول فيديو كافتراضي
+                        const firstVidId = getYoutubeId(links[0]);
+                        if (firstVidId) {
+                            document.getElementById('videoArea').innerHTML = 
+                                `<iframe id="mainPlayer" src="https://www.youtube.com/embed/${firstVidId}?rel=0&modestbranding=1&origin=${window.location.origin}" allowfullscreen></iframe>`;
+                        } else {
+                            document.getElementById('videoArea').innerHTML = '<p class="text-white p-10 font-bold text-center">⚠️ رابط الفيديو غير مدعوم</p>';
+                        }
+
+                        // لو فيه أكتر من فيديو، نرسم زراير (قائمة تشغيل) تحت الشاشة
+                        if (links.length > 1) {
+                            let playlistHtml = `
+                                <div class="mt-6 p-6 bg-white dark:bg-[#0f172a] rounded-[2rem] shadow-sm border border-slate-100 dark:border-white/5">
+                                    <h4 class="font-black text-brand-blue dark:text-white mb-4 flex items-center gap-2">
+                                        <span class="text-xl">📺</span> أجزاء المحاضرة:
+                                    </h4>
+                                    <div class="flex flex-wrap gap-3">
+                            `;
+                            
+                            links.forEach((link, index) => {
+                                const vidId = getYoutubeId(link);
+                                if (vidId) {
+                                    playlistHtml += `
+                                        <button onclick="document.getElementById('mainPlayer').src='https://www.youtube.com/embed/${vidId}?rel=0&modestbranding=1&autoplay=1&origin=${window.location.origin}'"
+                                                class="bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-white/10 text-brand-blue dark:text-white hover:bg-brand-purple hover:text-white hover:border-brand-purple px-5 py-2.5 rounded-xl font-bold transition-all shadow-sm focus:ring-2 focus:ring-brand-purple focus:outline-none flex items-center gap-2">
+                                            <span>▶️</span> الجزء ${index + 1}
+                                        </button>
+                                    `;
+                                }
+                            });
+
+                            playlistHtml += `</div></div>`;
+                            
+                            // إضافة قائمة التشغيل تحت مشغل الفيديو مباشرة
+                            document.getElementById('videoArea').insertAdjacentHTML('afterend', playlistHtml);
+                        }
+                    }
+                }
+
+                // ==========================================
+                // 2. نظام المرفقات (تم تصليح الخطأ هنا)
+                // ==========================================
+                if (lecture.fileUrl) {
+                    document.getElementById('fileArea').innerHTML = `
+                        <a href="${lecture.fileUrl}" target="_blank" class="w-full flex items-center justify-between p-4 bg-blue-50 dark:bg-blue-900/30 text-brand-blue dark:text-blue-400 rounded-2xl font-black hover:bg-blue-100 transition border border-blue-100">
+                            <span>تحميل الـ PDF</span>
+                            <span class="text-xl">📥</span>
+                        </a>`;
+                } else {
+                    document.getElementById('fileArea').innerHTML = '<p class="text-slate-400 italic text-center py-4">لا توجد ملفات</p>';
+                }
+
+            } catch (err) {
+                document.getElementById('lectureName').innerText = "❌ خطأ في التحميل";
+            }
+        }
+
+        // دالة استخراج كود اليوتيوب
+        function getYoutubeId(url) {
+            const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
+            const match = url.match(regExp);
+            return (match && match[2].length == 11) ? match[2] : null;
+        }
+    </script>
+</body>
+</html>
